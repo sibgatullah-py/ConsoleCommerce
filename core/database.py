@@ -40,4 +40,27 @@ class DatabaseManager:
                             )
                             """)
         
+        # products table
+        self.cursor.execute("""
+                            CRATE TABLE IF NOT EXISTS products (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                name TEXT NOT NULL,
+                                price REAL NOT NULL,
+                                stock INTEGER DEFAULT 0,
+                                description TEXT
+                            )
+                            """)
         
+        # Order Table
+        self.cursor.execute("""
+                            CREATE TABLE IF NOT EXISTS orders (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                user_id INTEGER,
+                                items_json TEXT,
+                                created_at TEXT,
+                                FOREIGN KEY (user_id) REFERENCES users(id)
+                            )
+                            """)
+        
+        self.conn.commit()
+    
