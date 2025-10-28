@@ -25,6 +25,19 @@ class DatabaseManager:
         
         
         
-    
+    #------------ Table Creation ------------
+    def create_tables(self):
+        '''Create all required tables if they do not already exists.'''
+        
+        # user table
+        self.cursor.execute("""
+                            CREATE TABLE IF NOT EXISTS users(
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                username TEXT UNIQUE NOT NULL,
+                                password TEXT NOT NULL,
+                                role TEXT DEFAULT 'customer',
+                                created_at TEXT
+                            )
+                            """)
         
         
