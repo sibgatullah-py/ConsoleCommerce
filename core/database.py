@@ -85,7 +85,7 @@ class DatabaseManager:
         admin_count = self.cursor.fetchone()[0]# fetchone() retrives the first row from the query result in line 71. returns None if no row were found
 
         if admin_count == 0:
-            print("[INIT] Creating default admin account...")
+            print(" Creating default admin account...")
 
             username = "admin"
             password = "admin123"
@@ -98,3 +98,25 @@ class DatabaseManager:
             self.conn.commit()
 
             print(" Default admin created! (username: admin, password: admin123)")
+            
+            
+    #------------ General Query Execution ------------>
+    def execute(self, query: str, params: tuple = (), fetchone: bool=False, fetchall: bool = False,commit:bool=False):
+        """
+        Execute a SQL query safely with parameters.
+        Handles fetching and committing automatically .
+        Returns fetched data if requested .
+        """
+        try:
+            self.cursor.execute(query, params) # executes any SQL command [INS,UPD,SEL etc] params safely injects dynamic values into query
+            
+            if commit: # in default we kept commit false inline 104 , commits will change the database when we assign it true
+                self.conn.commit()
+            if fetchone: # gets the first row like getting a single user by id 
+                return self.cursor.fetchone()
+            if fetchall: # returns a list of matching rows like a list pr products 
+                return self.cursor.fetchall()
+                
+        except sqlite3.Error as e:
+            print(f"[DB ERROR] {e}")
+            return None
