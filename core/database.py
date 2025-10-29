@@ -20,13 +20,13 @@ class DatabaseManager:
         self.cursor = self.conn.cursor() # creates a cursor object for executing SQL queries on that database 
         
         # initialize tables and admin account 
-        self.create_tables()
-        self.create_default_admin()
+        self._create_tables()
+        self._create_default_admin() # The leading _ means this method is meant to use internally only 
         
         
         
     #------------ Table Creation ------------
-    def create_tables(self):
+    def _create_tables(self):
         '''Create all required tables if they do not already exists.'''
         
         # user table
@@ -64,3 +64,37 @@ class DatabaseManager:
         
         self.conn.commit()
     
+    
+    #------------ Default Admin Creation ------------>
+    
+    # def _create_default_admin(self): 
+    #     """Creates a default admin user if none exists."""
+    #     self.cursor.execute("SELECT * FROM users WHERE role='admin'")
+    #     admin_exists = self.cursor.fetchone()
+    #     if not admin_exists: # if no row were found , it creates one . 
+    #         self.cursor.execute(
+    #             "INSERT INTO users (username, password, role) VALUES (?,?,?)",('admin','admin123','admin'),
+               
+    #         )
+    #         self.conn.commit() # saving the changes in database . 
+       
+            
+    def _create_default_admin(self):# defines a private method . which runs automatically when the Database class is initialized.
+        """Bootstrap one default admin if none exists."""
+        self.cursor.execute("SELECT COUNT(*) FROM users WHERE role = 'admin'")# looking for any row with the role admin . if none is found returns nothing
+        admin_count = self.cursor.fetchone()[0]# fetchone() retrives the first row from the query result in line 71. returns None if no row were found
+
+        if admin_count == 0:
+            print("[INIT] Creating default admin account...")
+
+            username = "admin"
+            password = "admin123"
+            created_at = datetime.now().isoformat(timespec="seconds")
+            # ?,?,? is parameterized query syntax in SQLite, it prevents SQL injection and makes the code more secure and clean
+            self.cursor.execute("""
+                INSERT INTO users (username, password, role, created_at)
+                VALUES (?, ?, 'admin', ?)
+            """, (username, password, created_at))
+            self.conn.commit()
+
+            print(" Default admin created! (username: admin, password: admin123)")
