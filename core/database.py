@@ -120,3 +120,22 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"[DB ERROR] {e}")
             return None
+        
+        
+    #------------ Context Manager Support ------------>
+    '''
+    it allows me to use my database class in a with block
+    (with database() as db)
+    it prevents database locks and resource leaks 
+    '''
+    def __enter__(self):
+        return self
+    def __exit__(self,exc_type,exc_val,exc_tb):
+        self.close
+        
+    
+    #------------ Connection Close ------------>
+    def close(self):
+        """Close database connection safely"""
+        if self.conn:
+            self.conn.close()
