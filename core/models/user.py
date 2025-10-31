@@ -44,3 +44,7 @@ class User: # Building an user object. this method is for user tasks (register, 
         else:
             print("Incorrect Password.")
             return None
+        
+    #----- Fetch User ----->
+    def get_by_username(self, username: str):
+        """Fetch a user by username"""
