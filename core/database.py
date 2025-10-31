@@ -42,7 +42,7 @@ class DatabaseManager:
         
         # products table
         self.cursor.execute("""
-                            CRATE TABLE IF NOT EXISTS products (
+                            CREATE TABLE IF NOT EXISTS products (
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 name TEXT NOT NULL,
                                 price REAL NOT NULL,
