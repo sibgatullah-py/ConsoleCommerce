@@ -34,3 +34,10 @@ class Product:
             (product_id),
             fetchone = True
         )
+        
+    def list_products(self):
+        """return all products"""
+        return self.db.execute(
+            "SELECT * FROM products ORDERED BY id ASC",
+            fetchall = True
+        )
