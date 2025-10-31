@@ -48,3 +48,6 @@ class User: # Building an user object. this method is for user tasks (register, 
     #----- Fetch User ----->
     def get_by_username(self, username: str):
         """Fetch a user by username"""
+        result = self.db.fetch_one("SELECT * FROM users WHERE username = ?",(username,))
+        return result
+    
