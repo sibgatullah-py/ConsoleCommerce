@@ -28,3 +28,7 @@ class User: # Building an user object. this method is for user tasks (register, 
         print(f"User '{username}' registered successfully!")
         return True
         
+        
+    #----- Login Validation ----->
+    def validate_login(self, username:str, password:str):
+        """Check if username and password are valid."""
