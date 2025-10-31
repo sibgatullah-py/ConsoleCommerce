@@ -50,4 +50,6 @@ class User: # Building an user object. this method is for user tasks (register, 
         """Fetch a user by username"""
         result = self.db.fetch_one("SELECT * FROM users WHERE username = ?",(username,))
         return result
-    
+    def get_by_id(self, user_id:int):
+        """Fetch a user by user_id"""
+        result = self.db.fetch_one("SELECT * FROM users WHERE user_id = ?",(user_id))
