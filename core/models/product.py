@@ -41,3 +41,12 @@ class Product:
             "SELECT * FROM products ORDERED BY id ASC",
             fetchall = True
         )
+        
+    def search_products(self, keyword: str):
+        """Find products matching a search keyword ( name or description )"""
+        pattern = f"%{keyword}%"
+        return self.db.execute(
+            "SELECT * FROM products WHERE name LIKE ? OR description LIKE ?",
+            (pattern, pattern),
+            fetchall = True
+        )
