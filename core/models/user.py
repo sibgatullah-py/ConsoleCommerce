@@ -32,3 +32,15 @@ class User: # Building an user object. this method is for user tasks (register, 
     #----- Login Validation ----->
     def validate_login(self, username:str, password:str):
         """Check if username and password are valid."""
+        
+        user = self.get_by_username(username)
+        if not user:
+            print('User not found')
+            return None
+        
+        if verify_password(password, user['password']):
+            print("Welcome Back, {user['username']}!")
+            return user
+        else:
+            print("Incorrect Password.")
+            return None
