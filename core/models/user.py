@@ -1,7 +1,7 @@
 # core/models/user.py
 
 from datetime import datetime # let us use current date time.
-from core.utils import verify_password # since we aren't hashing the password so we only need this method 
+from core.utils import verify_password # since we aren't hashing the password so we only need this method but looks like i didn't use it -_-
 
 class User: # Building an user object. this method is for user tasks (register, login, fetch)
     """Handles user data and database interactions."""
@@ -17,29 +17,31 @@ class User: # Building an user object. this method is for user tasks (register, 
             print("Username already exists !")
             return False
         
-        created_at = datetime.now().isoformat(timespec='seconds')
+        created_at = datetime.now().isoformat(timespec='seconds') # Prepare the creation time of the user
         
         # store password directly plain text no hashing 
         self.db.execute("""
                         INSERT INTO users (username, password, role, created_at)
                         VALUES (?,?,?,?)
-                        """) # this is the same as cursor.execute() just when we call cursor after defining it we are doing this same thing as db.execute()
+                        """,(username, password, role, created_at),
+                        commit = True
+                        ) # this is the same as cursor.execute() just when we call cursor after defining it we are doing this same thing as db.execute()
         
         print(f"User '{username}' registered successfully!")
         return True
         
         
     #----- Login Validation ----->
-    def validate_login(self, username:str, password:str):
+    def validate_login(self, username:str, password:str): # validate_login returns: the user record (on success) or None (on failure).
         """Check if username and password are valid."""
         
         user = self.get_by_username(username)
         if not user:
             print('User not found')
-            return None
+            return None # if the username doesn't exists then it will return None after giving an error message 
         
         if verify_password(password, user['password']):
-            print("Welcome Back, {user['username']}!")
+            print(f"Welcome back, {user['username']}!")
             return user
         else:
             print("Incorrect Password.")
@@ -52,4 +54,5 @@ class User: # Building an user object. this method is for user tasks (register, 
         return result
     def get_by_id(self, user_id:int):
         """Fetch a user by user_id"""
-        result = self.db.fetch_one("SELECT * FROM users WHERE user_id = ?",(user_id))
+        result = self.db.fetch_one("SELECT * FROM users WHERE id = ?",(user_id))
+        return result
