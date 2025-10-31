@@ -1,0 +1,2 @@
+# core/models/product.py
+
