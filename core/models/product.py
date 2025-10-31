@@ -82,3 +82,15 @@ class Product:
         self.db.execute(query, tuple(values), commit = True)
         print(f"Product ID {product_id} updated successfully")
         return True
+    
+    # ----- DELETE ----->
+    def delete_product(self, product_id: int):
+        """Delete a product from the database"""
+        product = self.get_by_id(product_id)
+        if not product:
+            print("Product not found.")
+            return False
+        
+        self.db.execute("DELETE FROM products WHERE id = ?",(product_id,),commit = True)
+        print(f" Product ID {product_id} deleted successfully")
+        return True
