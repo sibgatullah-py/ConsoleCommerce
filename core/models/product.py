@@ -50,3 +50,35 @@ class Product:
             (pattern, pattern),
             fetchall = True
         )
+        
+        
+    # ----- UPDATE ----->
+    def update_product(self, product_id: int, name=None, price=None, stock=None, description=None):
+        """Update a product's fields dynamically."""
+        updates = []
+        values = []
+        
+        if name:
+            updates.append("name = ?")
+            values.append(name)
+        if price is not None:
+            updates.append("price = ?")
+            values.append(float(price))
+        if stock is not None:
+            updates.append("stock = ?")
+            values.append(int(stock))
+        if description is not None:
+            updates.append("description = ?")
+            values.append(description)
+            
+        if not updates:
+            print("nothing to update")
+            return False
+        
+        
+        values.append(product_id)
+        query = f"UPDATE products SET {', '.join(updates)} WHERE id = ?"
+        
+        self.db.execute(query, tuple(values), commit = True)
+        print(f"Product ID {product_id} updated successfully")
+        return True
