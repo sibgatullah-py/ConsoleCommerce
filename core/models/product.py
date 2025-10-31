@@ -25,3 +25,12 @@ class Product:
         
         print(f"Product {name} added successfully!")
         return True
+    
+    # ----- READ ----->
+    def get_by_id(self,product_id:int):
+        """Fetch one product by it's ID"""
+        return self.db.execute(
+            "SELECT * FROM products WHERE id = ?",
+            (product_id),
+            fetchone = True
+        )
