@@ -41,7 +41,7 @@ class Product: # this class is the blueprint as it will be used to create produc
     def list_products(self): # No parameters cause we want to see all the products
         """return all products"""
         return self.db.execute(
-            "SELECT * FROM products ORDERED BY id ASC", # Get all product sorted by their id in ascending order. 
+            "SELECT * FROM products ORDER BY id ASC", # Get all product sorted by their id in ascending order. 
             fetchall = True # This returns a list of rows . each rows are a product . 
         )
         
