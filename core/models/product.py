@@ -104,17 +104,17 @@ class Product: # this class is the blueprint as it will be used to create produc
     # ----- STOCK HELPERS ----->
     def reduce_stock(self, product_id:int, qty:int):
         """Reduce product stock when an order is placed"""
-        product = self.get_by_id(product_id)
+        product = self.get_by_id(product_id) # first fetch the product
         if not product:
             print("Product not found.")
             return False
         
-        current_stock = product[3] # since fetchone returns a tuple, stock is 4th column (0 based indexing)
-        if current_stock < qty:
+        current_stock = product[3] # since fetchone returns a tuple, stock is 4th column (0 based indexing) Index 3 -> stock column 
+        if current_stock < qty: # checking if we have enough stock for the user to place order
             print("Not enough products in stock")
             
         self.db.execute(
-            "UPDATE products SET stock = stock - ? WHERE id = ?",
+            "UPDATE products SET stock = stock - ? WHERE id = ?", # substract the number of stock after a successful order have been placed 
             (qty,product_id),
             commit = True
         )
@@ -123,7 +123,7 @@ class Product: # this class is the blueprint as it will be used to create produc
     def increase_stock(self, product_id: int, qty: int):
         """Increase product stock (used when canceling orders)."""
         self.db.execute(
-            "UPDATE products SET stock = stock + ? WHERE id = ?",
+            "UPDATE products SET stock = stock + ? WHERE id = ?", # adding the number back after the order has been canceled 
             (qty,product_id),
             commit = True
         )
