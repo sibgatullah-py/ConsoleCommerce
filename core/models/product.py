@@ -59,42 +59,44 @@ class Product: # this class is the blueprint as it will be used to create produc
     # ----- UPDATE ----->
     def update_product(self, product_id: int, name=None, price=None, stock=None, description=None):
         """Update a product's fields dynamically."""
-        updates = []
-        values = []
+        # here creating two empty list to collect -- 
+        updates = [] # *the parts of SQL we'll update and  
+        values = [] # *the values go with them .
         
-        if name:
+        if name: # if the user passes a new name, we add "name = ?" to the (update) list, and we store it's value separately in (values) list
             updates.append("name = ?")
             values.append(name)
-        if price is not None:
+        if price is not None: # repeat 
             updates.append("price = ?")
             values.append(float(price))
-        if stock is not None:
+        if stock is not None: # repeat 
             updates.append("stock = ?")
             values.append(int(stock))
-        if description is not None:
+        if description is not None: # repeat
             updates.append("description = ?")
             values.append(description)
             
-        if not updates:
-            print("nothing to update")
+        if not updates: # if there is no update data then we will exit after printing this notification
+            print("nothing to update") 
             return False
         
         
-        values.append(product_id)
-        query = f"UPDATE products SET {', '.join(updates)} WHERE id = ?"
-        
-        self.db.execute(query, tuple(values), commit = True)
+        values.append(product_id) # at the end we add the product_id-- because our query will need it in (WHERE id = ?)
+        # the .join() method is to concatenate elements of na iterable such as (list,tuple,set)
+        query = f"UPDATE products SET {', '.join(updates)} WHERE id = ?" # This builds the SQL dynamically. as we are joining the iterable list updates here
+        # run the SQL command and save it by commit = True
+        self.db.execute(query, tuple(values), commit = True) # after making the dynamic query we put the query and values side by side to push the items in the table
         print(f"Product ID {product_id} updated successfully")
         return True
     
     # ----- DELETE ----->
     def delete_product(self, product_id: int):
         """Delete a product from the database"""
-        product = self.get_by_id(product_id)
-        if not product:
+        product = self.get_by_id(product_id) # first checking if the product exists
+        if not product: # if the product isn't found we exit after giving a notification 
             print("Product not found.")
             return False
-        
-        self.db.execute("DELETE FROM products WHERE id = ?",(product_id,),commit = True)
+        # The line bellow holds the product_id and deletes everything regarding that id 
+        self.db.execute("DELETE FROM products WHERE id = ?",(product_id,),commit = True) # removes product permanently 
         print(f" Product ID {product_id} deleted successfully")
         return True
