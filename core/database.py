@@ -70,7 +70,7 @@ class DatabaseManager:
         admin_count = self.cursor.fetchone()[0]
 
         if admin_count == 0:
-            print("🛠 Creating default admin account...")
+            print("Creating default admin account...")
 
             username = "admin"
             password = "admin123"  # In real apps, hash this!
@@ -82,7 +82,7 @@ class DatabaseManager:
             """, (username, password, created_at))
             self.conn.commit()
 
-            print("✅ Default admin created! (username: admin, password: admin123)")
+            print("Default admin created! (username: admin, password: admin123)")
 
     # ------------ General Query Execution ------------
     def execute(self, query: str, params: tuple = (), fetchone=False, fetchall=False, commit=False):
