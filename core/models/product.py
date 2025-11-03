@@ -116,3 +116,17 @@ class Product:
             (qty, product_id), commit=True
         )
         return True
+
+
+'''
+All the methods of product.py:->
+    1. add_product()
+    2. get_by_id()
+    3. list_products()
+    4. search_products()
+    5. update_product()
+    6. delete_product()
+    7. reduce_product()
+    8. increase_product()
+
+'''
