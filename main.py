@@ -46,6 +46,10 @@ def admin_menu(user, db, user_model, product_model, order_model):
             pause()
 
         elif choice == "3":
+            products = product_model.list_products()
+            for p in products:
+                print(f"[{p['id']}] {p['name']} — ${p['price']} (Stock: {p['stock']})")
+                
             pid = int(input("Enter product ID to update: "))
             name = input("New name (leave empty to skip): ") or None
             price = input("New price (leave empty to skip): ")
@@ -118,6 +122,10 @@ def customer_menu(user, db, user_model, product_model, order_model):
             pause()
 
         elif choice == "3":
+            products = product_model.list_products()
+            for p in products:
+                print(f"[{p['id']}] {p['name']} — ${p['price']} (Stock: {p['stock']})")
+            print("Choose the product you want to order")
             pid = int(input("Product ID to order: "))
             qty = int(input("Quantity: "))
             product = product_model.get_by_id(pid)

@@ -1,5 +1,4 @@
 from datetime import datetime
-import hashlib
 
 class User:
     """Handles user data and database interactions."""
@@ -17,13 +16,11 @@ class User:
 
         created_at = datetime.now().isoformat(timespec="seconds")
 
-        # Hash password (basic example)
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
+        # Store password as plain text
         self.db.execute("""
             INSERT INTO users (username, password, role, created_at)
             VALUES (?, ?, ?, ?)
-        """, (username, hashed_password, role, created_at), commit=True)
+        """, (username, password, role, created_at), commit=True)
 
         print(f"User '{username}' registered successfully!")
         return True
@@ -36,8 +33,7 @@ class User:
             print("User not found.")
             return None
 
-        hashed_input = hashlib.sha256(password.encode()).hexdigest()
-        if hashed_input == user["password"]:
+        if password == user["password"]:
             print(f"Welcome back, {user['username']}!")
             return user
         else:

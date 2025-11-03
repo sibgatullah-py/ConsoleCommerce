@@ -1,7 +1,14 @@
-import sqlite3
-import os
-from datetime import datetime
-import hashlib
+'''
+Database works:->
+    1. Open the database by making a connection
+    2. Create room(table) inside
+    3. Add, find, update or delete things in the table
+    4. Commit the changes and close the database connection
+'''
+
+import sqlite3 # The python sqlite3 library file
+import os # helps to work with folder and file path
+from datetime import datetime # helps to record current date time for 
 
 class DatabaseManager:
     """
@@ -73,7 +80,7 @@ class DatabaseManager:
             print("Creating default admin account...")
 
             username = "admin"
-            password = "admin123"  # In real apps, hash this!
+            password = "admin123"  # Stored as plain text
             created_at = datetime.now().isoformat(timespec="seconds")
 
             self.cursor.execute("""
