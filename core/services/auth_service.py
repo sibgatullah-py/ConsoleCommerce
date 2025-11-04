@@ -18,4 +18,9 @@ class AuthService:
         self.current_user = None # keeps track of logged-in user row 
         
     # ----- Registration -----
-    
+    def register_user(self, username: str, password: str, role:str="customer"):
+        """
+        Registers a new user.
+        Returns True if successful, False if username already exists.
+        """
+        return self.user_model.register(username, password, role)
