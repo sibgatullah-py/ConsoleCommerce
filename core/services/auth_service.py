@@ -24,3 +24,18 @@ class AuthService:
         Returns True if successful, False if username already exists.
         """
         return self.user_model.register(username, password, role)
+    
+    
+    # ----- Login -----
+    def login_user(self, username: str, password:str):
+        """
+        Attempts to login a user.
+        Returns True on success, False on failure.
+        """
+        user = self.user_model.validate_login(username, password)
+        if user:
+            self.current_user = user
+            return True
+        return False
+    
+    
