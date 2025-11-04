@@ -57,3 +57,11 @@ class AuthService:
     def is_admin(self) -> bool:
         """Returns True if the current user is an admin."""
         return self.current_user and self.current_user["role"] == "admin"
+    
+    
+'''
+- It wraps around the User model, so no duplicate logic can form.
+- Maintains session state in memory with self.current_user.
+- Returns clean results (True/False) so CLI/UI can decide what to show.
+- Compatible with database and current schema 
+'''
