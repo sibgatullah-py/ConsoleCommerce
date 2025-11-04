@@ -44,3 +44,16 @@ class AuthService:
         if self.current_user:
             print(f"User '{self.current_user['username']}' logged out.")
         self.current_user = None
+        
+    # ----- Status -----
+    def get_logged_in_user(self):
+        """Returns the current logged-in user (SQlite3.Row or None)."""
+        return self.current_user
+    
+    def is_logged_in(self) -> bool:
+        """Returns True if a user is logged in."""
+        return self.current_user is not None
+    
+    def is_admin(self) -> bool:
+        """Returns True if the current user is an admin."""
+        return self.current_user and self.current_user["role"] == "admin"
