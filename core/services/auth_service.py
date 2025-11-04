@@ -38,4 +38,9 @@ class AuthService:
             return True
         return False
     
-    
+    # ----- Logout -----
+    def logout_user(self):
+        """Logs out the current user."""
+        if self.current_user:
+            print(f"User '{self.current_user['username']}' logged out.")
+        self.current_user = None
