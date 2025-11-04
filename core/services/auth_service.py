@@ -7,5 +7,15 @@ it won't print messages. instead it will return status or objects.
 Handles user authentication and session management.
 Uses the User model for database operations.
 '''
-
 from core.models.user import User
+
+class AuthService:
+    """Service layer for user authentication and registration."""
+    
+    def __init__(self,db):
+        self.db = db
+        self.user_model = User(db)
+        self.current_user = None # keeps track of logged-in user row 
+        
+    # ----- Registration -----
+    
