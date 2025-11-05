@@ -21,3 +21,26 @@ class CartService:
     def __init__(self,db):
         self.db = db
         self.carts = {} # in_memory carts: {user_id:{product_id: qty,....}}
+        
+    # ----- Add to Cart -----
+    def add_to_cart(self, user_id: int, product_id:int, qty:int = 1):
+        """Add a product to the user's cart."""
+        product = Product(self.db).get_by_id(product_id)
+        if not product:
+            print("Product not found!")
+            return False
+        
+        if product["stock"] <= 0:
+            print("Product is out of stock.")
+            return False
+        
+        # Initialize user cart if not exists
+        if user_id not in self.carts:
+            self.carts[user_id] = {}
+            
+        # Add quantity
+        self.carts[user_id][product_id] = self.carts[user_id].get(product_id, 0)
+        print(f"Added {qty} X {product['name']} to your cart.")
+        return True
+    
+    
