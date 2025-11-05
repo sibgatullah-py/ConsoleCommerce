@@ -43,6 +43,19 @@ class CartService:
         print(f"Added {qty} X {product['name']} to your cart.")
         return True
     
+    
+    # ----- Remove from Cart -----
+    def remove_from_cart(self, user_id:int,product_id:int):
+        """Remove a product entirely from the cart using the product ID"""
+        if user_id not in self.carts or product_id not in self.carts[user_id]:
+            print("Product not in your cart")
+            return False
+        
+        del self.carts[user_id][product_id]
+        print("Product has been removed from your cart.")
+        return True
+    
+    
     # ----- View Cart ----- 
     def view_cart(self, user_id: int):
         """Show all items in the user's cart"""
