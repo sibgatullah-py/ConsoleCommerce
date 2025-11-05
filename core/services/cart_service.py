@@ -43,4 +43,19 @@ class CartService:
         print(f"Added {qty} X {product['name']} to your cart.")
         return True
     
-    
+    # ----- View Cart ----- 
+    def view_cart(self, user_id: int):
+        """Show all items in the user's cart"""
+        if user_id not in self.carts or not self.carts[user_id]:
+            print("Your cart is empty.")
+            return []
+        
+        print("\n--- Your Cart ---")
+        total = 0
+        for product_id, qty in self.carts[user_id].items():
+            product = Product(self.db).get_by_id(product_id)
+            subtotal = product["price"] * qty
+            print(f"{product['name']} (x{qty}) - ${subtotal:.2f}")
+            total += subtotal
+        print(f"Total: ${total: .2f}")
+        return self.carts[user_id]
