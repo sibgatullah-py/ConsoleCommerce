@@ -101,3 +101,16 @@ class CartService:
         del self.carts[user_id]
         print("Checkout completed! Your order has been placed.")
         return True
+    
+    
+'''
+How it works:
+    - Keeps each user's cart in memory -> {user_id: {product_id: qty}}
+    - Uses the Product model to check product details 
+    - Uses the Order model to create an order during checkout 
+    - Provides clean methods:
+        1. add_to_cart()
+        2. remove_from_cart()
+        3. view_cart()
+        4. checkout() 
+'''
