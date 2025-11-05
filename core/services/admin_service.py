@@ -17,3 +17,9 @@ Security notes (not implemented here, but will work on later):
     1. Stop storing plaintext passwords and use hashing + salt
     2. Add proper audit logging for admin actions
 """
+
+'''
+The typing module allows to indicate the expected types of variables(int str etc), function parameters and return values.
+It provides tools and features for adding type hints. 
+'''
+from typing import Optional, Any, List, Dict  
