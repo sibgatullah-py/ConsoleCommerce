@@ -72,3 +72,32 @@ class CartService:
             total += subtotal
         print(f"Total: ${total: .2f}")
         return self.carts[user_id]
+    
+    
+    # ----- Checkout -----
+    def checkout(self, user_id: int):
+        """Convert cart to order and clear it."""
+        if user_id not in self.carts or not self.carts[user_id]:
+            print("Cart is empty. Nothing to checkout.")
+            return False
+        
+        items = []
+        for pid, qty in self.carts[user_id].items():
+            product = Product(self.db).get_by_id(pid)
+            if not product:
+                continue
+            items.append({
+                'product_id':pid,
+                'name':product['name'],
+                'price':product['price'],
+                'qty':qty,
+            })
+            
+        # Create an order record
+        order_model = Order(self.db)
+        order_model.create_order(user_id,items)
+        
+        # Clear cart
+        del self.carts[user_id]
+        print("Checkout completed! Your order has been placed.")
+        return True
