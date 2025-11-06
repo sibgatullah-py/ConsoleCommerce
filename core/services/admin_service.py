@@ -28,3 +28,19 @@ from  core.models.product import Product
 from  core.models.order import Order
 from  core.models.user import User
 # all the dependencies are imported-----------------------------------------------------------------------------------------
+
+
+class AdminService:
+    def __init__(self, db, auth_service: Optional[Any] = None):
+        """
+        db          : DatabaseManager instance for operation over database
+        auth_service: Optional AuthService instance (used for permission checks).
+                      If not provided, method wil not enforce admin-only checks.
+        """
+        self.db = db
+        self.auth_service = auth_service
+        self.product_model = Product(db)
+        self.order_model = Order(db)
+        self.user_model = User(db)
+        
+    
