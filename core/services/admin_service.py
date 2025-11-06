@@ -59,3 +59,25 @@ class AdminService:
             return False
         
         return self.auth_service.is_admin()
+    
+    
+    # ----- Product management -----
+    def add_product(self, name: str, price: float, stock: int = 0, description: str = "") -> bool:
+        """
+        Add a new product. Admin only (iff auth_service provided).
+        Returns True on success, False on failure / permission denied. 
+        """
+        if not self._ensure_admin():
+            return False
+        
+        return self.product_model.add_product(name, price, stock, description)
+    
+    def update_product(self, product_id: int, name = None, price = None, stock=None,description=None) -> bool:
+        """
+        Update an existing product's fields. Fields left as None are not changed.
+        """
+        if not self._ensure_admin():
+            return False
+        
+        return self.product_model.update_product(product_id, name, price, stock, description):
+    
