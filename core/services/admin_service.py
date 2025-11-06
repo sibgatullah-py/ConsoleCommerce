@@ -87,3 +87,14 @@ class AdminService:
             return False
         
         return self.product_model.delete_product(product_id)
+    
+    def list_product(self) -> list[Dict]:
+        """
+        Return list of all products. If permission denied, returns empty list. 
+        Uses product_model.list_products() which returns sqlite rows (or None).
+        """
+        if not self._ensure_admin():
+            return []
+        
+        rows = self.product_model.list_products()
+        return list(rows) if rows else []
