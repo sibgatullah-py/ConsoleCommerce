@@ -23,3 +23,8 @@ The typing module allows to indicate the expected types of variables(int str etc
 It provides tools and features for adding type hints. 
 '''
 from typing import Optional, Any, List, Dict  
+
+from  core.models.product import Product
+from  core.models.order import Order
+from  core.models.user import User
+# all the dependencies are imported-----------------------------------------------------------------------------------------
