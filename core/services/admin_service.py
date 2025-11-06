@@ -44,3 +44,18 @@ class AdminService:
         self.user_model = User(db)
         
     
+    # ----- Permission Helper -----
+    def _ensure_admin(self) -> bool:
+        """
+        If auth_service was provided, ensures the current user is an admin.
+        Returns True if permission is OK (or no auth_service was supplied).
+        Returns False if permission denied.
+        """
+        if not self.auth_service:
+            # No auth system provided -- assume caller handles permission
+            return True
+        
+        if not self.auth_service.is_logged_in():
+            return False
+        
+        return self.auth_service.is_admin()
