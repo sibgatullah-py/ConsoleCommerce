@@ -118,3 +118,17 @@ class AdminService:
         if not self._ensure_admin():
             return False
         return self.product_model.reduce_stock(product_id, qty)
+    
+    
+    # ----- Order confirmation / removal 
+    def list_orders(self) -> list[Dict]:
+        """Return all orders (admin view)."""
+        if not self._ensure_admin():
+            return []
+        return self.order_model.get_all_orders()
+    
+    def get_order(self, order_id: int):
+        """Return a single order dict or None."""
+        if not self._ensure_admin():
+            return None 
+        return self.order_model.get_order_by_id(order_id)
