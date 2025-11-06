@@ -104,3 +104,17 @@ class AdminService:
         if not self._ensure_admin():
             return None
         return self.product_model.get_by_id(product_id)
+    
+    
+    # ----- Stock helpers -----
+    def increase_stock(self, product_id: int, qty: int) -> bool:
+        """Increase a product's stock (admin-only if auth is used)."""
+        if not self._ensure_admin():
+            return False
+        return self.product_model.increase_stock(product_id, qty)
+    
+    def reduce_stock(self, product_id: int, qty: int) -> bool:
+        """Increase a product's stock (admin-only if auth is used)."""
+        if not self._ensure_admin():
+            return False
+        return self.product_model.reduce_stock(product_id, qty)
