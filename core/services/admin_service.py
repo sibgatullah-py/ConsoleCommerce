@@ -79,5 +79,11 @@ class AdminService:
         if not self._ensure_admin():
             return False
         
-        return self.product_model.update_product(product_id, name, price, stock, description):
+        return self.product_model.update_product(product_id, name, price, stock, description)
     
+    def delete_product(self, product_id: int) -> bool:
+        """Delete product by id. Returns True  on success, false on failure / permission denied"""
+        if not self._ensure_admin():
+            return False
+        
+        return self.product_model.delete_product(product_id)
