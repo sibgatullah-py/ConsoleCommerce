@@ -98,3 +98,9 @@ class AdminService:
         
         rows = self.product_model.list_products()
         return list(rows) if rows else []
+    
+    def get_product(self, product_id: int):
+        """Return single product row or None."""
+        if not self._ensure_admin():
+            return None
+        return self.product_model.get_by_id(product_id)
