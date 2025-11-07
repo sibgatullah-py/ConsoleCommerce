@@ -247,3 +247,14 @@ class AdminService:
             return 0
         rows = self.db.fetchone("SELECT COUNT(* as c FROM products")
         return rows['c'] if rows else 0
+    
+    def order_count(self) -> int:
+        """
+        returns total number of orders
+        """
+        if not self._ensure_admin():
+            return 0
+        rows = self.db.fetchone("SELECT COUNT(*) as c FROM orders")
+        return rows['c'] if rows else 0
+    
+    
