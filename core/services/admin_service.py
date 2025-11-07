@@ -212,3 +212,27 @@ class AdminService:
             return True
         except Exception:
             return False
+        
+    def demote_admin_to_customer(self,user_id:int) -> bool:
+        """
+        Demote an admin back to customer. Prevent demoting the last admin if desired
+        """
+        if not self._ensure_admin():
+            return False
+        
+        user = self.user_model.get_by_id(user_id)
+        if not user:
+            return False
+        
+        # Prevent demoting yourself via auth_service
+        if self.auth_service and self.auth_service.is_logged_in():
+            current = self.auth_service.get_logged_in_user()
+            # Don't allow demoting the current logged-in admin
+            if current and current['id'] == user_id:
+                return False
+            
+        try:
+            self.db.execute("UPDATE users SET role = 'customer' WHERE id = ?",(user_id))
+            return True
+        except Exception:
+            return False
