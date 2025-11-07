@@ -158,4 +158,10 @@ class AdminService:
                     # Best-effort: ignorefailures restoring stock but continue 
                     self.product_model.increase_stock(pid,qty)
                     
-        
+        # Update the order status in DB
+        try:
+            # The Order.update_order method expects new_items list or new_status
+            self.order_model.update_order(order_id, new_items=None, new_status=new_status)
+            return True
+        except Exception:
+            return False
