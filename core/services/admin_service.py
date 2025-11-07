@@ -193,3 +193,22 @@ class AdminService:
         except Exception:
             return False
             
+            
+    # ----- User Administration -----
+    def promote_user_to_admin(self,user_id:int)-> bool:
+        """
+        Change user's role to 'admin' from customer, returns True on success.
+        """
+        if not self._ensure_admin():
+            return False
+        
+        user = self.user_model.get_by_id(user_id)
+        if not user:
+            return False
+        
+        # Reuse Product.update_product style: dynamic update
+        try:
+            self.db.execute("UPDATE users SET role = 'admin' WHERE id = ?",(user_id))
+            return True
+        except Exception:
+            return False
