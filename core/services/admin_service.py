@@ -132,3 +132,30 @@ class AdminService:
         if not self._ensure_admin():
             return None 
         return self.order_model.get_order_by_id(order_id)
+    
+    def update_order_status(self, order_id: int, new_status: str)-> bool:
+        """
+        Updata an order status. Handles 'cancled' specially: if an order is cancelled,
+        this method attempts to restore product stock for each item in the order (only if it wasn't cancelled before).
+        Returns True on success, False on failure or permission denied. 
+        """
+        if not self._ensure_admin(): # making sure the user is an admin
+            return False
+        
+        order = self.order_model.get_order_by_id(order_id)
+        if not order:
+            return False
+        
+        old_status = order['status']
+        
+        # if cancelling, restore stock for items of old_status wasn't already cancelled 
+        if new_status.lower() == "cancelled" and old_status.lower() != 'cancelled':
+            # restore stock per item
+            for item in order['items']:
+                pid  = item.get("product_id")
+                qty = item.get("qty",0)
+                if pid and qty:
+                    # Best-effort: ignorefailures restoring stock but continue 
+                    self.product_model.increase_stock(pid,qty)
+                    
+        
