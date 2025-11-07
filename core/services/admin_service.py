@@ -236,3 +236,14 @@ class AdminService:
             return True
         except Exception:
             return False
+        
+        
+    # ----- Admin report helpers ----- 
+    def product_count(self) -> int:
+        """
+        Returns number of products (admin only if auth provided )
+        """
+        if not self._ensure_admin():
+            return 0
+        rows = self.db.fetchone("SELECT COUNT(* as c FROM products")
+        return rows['c'] if rows else 0
