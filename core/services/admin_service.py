@@ -165,3 +165,31 @@ class AdminService:
             return True
         except Exception:
             return False
+        
+    
+    # Canceling and Deleting order methods
+    def cancel_order(self, order_id: int) -> bool:
+        """
+        Convenience method to cancel an order (sets status to 'cancelled' and restores stock).
+        """
+        return self.update_order_status(order_id, 'cancelled')
+    
+    def delete_order(self, order_id:int) -> bool:
+        """
+        Permanently6 delete an order record 
+        """
+        if not self._ensure_admin():
+            return False
+        
+        order = self.order_model.get_order_by_id(order_id)
+        if not order:
+            return False
+        
+        # Optionally : restore stock if deleting a pending/processing order
+        # For safety, we will not automatically restore stock here (admin can call increase_stock manually)
+        try:
+            self.order_model.delete_order(order_id)
+            return True
+        except Exception:
+            return False
+            
