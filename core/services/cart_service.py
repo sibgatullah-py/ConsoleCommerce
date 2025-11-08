@@ -38,8 +38,8 @@ class CartService:
         if user_id not in self.carts:
             self.carts[user_id] = {}
             
-        # Add quantity
-        self.carts[user_id][product_id] = self.carts[user_id].get(product_id, 0)
+        # Add quantity (accumulate if product already in cart)
+        self.carts[user_id][product_id] = self.carts[user_id].get(product_id, 0) + qty
         print(f"Added {qty} X {product['name']} to your cart.")
         return True
     
@@ -76,28 +76,75 @@ class CartService:
     
     # ----- Checkout -----
     def checkout(self, user_id: int):
-        """Convert cart to order and clear it."""
+        """
+        Convert cart to order and clear it.
+        Also reduces stock for each product in the cart.
+        """
         if user_id not in self.carts or not self.carts[user_id]:
             print("Cart is empty. Nothing to checkout.")
             return False
         
+        product_model = Product(self.db)
         items = []
+        
+        # First, verify stock availability for all items
         for pid, qty in self.carts[user_id].items():
-            product = Product(self.db).get_by_id(pid)
+            product = product_model.get_by_id(pid)
             if not product:
+                print(f"Product ID {pid} not found. Removing from cart.")
                 continue
+            
+            # Check if enough stock is available
+            if product['stock'] < qty:
+                print(f"Error: Not enough stock for {product['name']}. Available: {product['stock']}, Required: {qty}")
+                return False
+            
             items.append({
                 'product_id':pid,
                 'name':product['name'],
                 'price':product['price'],
                 'qty':qty,
             })
+        
+        # If we have items, proceed with checkout
+        if not items:
+            print("No valid items to checkout.")
+            return False
+        
+        # Reduce stock for each item BEFORE creating the order
+        # This ensures stock is reduced atomically with order creation
+        reduced_items = []  # Track items we've successfully reduced stock for
+        for pid, qty in self.carts[user_id].items():
+            product = product_model.get_by_id(pid)
+            if not product:
+                print(f"Product ID {pid} not found. Skipping...")
+                continue
             
+            product_name = product['name']
+            old_stock = product['stock']  # Store old stock value before reduction
+            
+            success = product_model.reduce_stock(pid, qty)
+            if not success:
+                # If stock reduction fails, we need to restore any stock we already reduced
+                print(f"Error: Failed to reduce stock for {product_name}. Rolling back...")
+                # Restore stock for items we already processed
+                for rollback_pid, rollback_qty in reduced_items:
+                    product_model.increase_stock(rollback_pid, rollback_qty)
+                return False
+            
+            # Show feedback about stock reduction
+            updated_product = product_model.get_by_id(pid)
+            if updated_product:
+                print(f"Reduced stock for {product_name}: {old_stock} → {updated_product['stock']} (-{qty})")
+            
+            # Track successfully reduced items
+            reduced_items.append((pid, qty))
+        
         # Create an order record
         order_model = Order(self.db)
-        order_model.create_order(user_id,items)
+        order_model.create_order(user_id, items)
         
-        # Clear cart
+        # Clear cart only after successful order creation and stock reduction
         del self.carts[user_id]
         print("Checkout completed! Your order has been placed.")
         return True

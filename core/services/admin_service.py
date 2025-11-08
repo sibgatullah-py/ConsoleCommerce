@@ -151,12 +151,21 @@ class AdminService:
         # if cancelling, restore stock for items of old_status wasn't already cancelled 
         if new_status.lower() == "cancelled" and old_status.lower() != 'cancelled':
             # restore stock per item
+            restored_count = 0
             for item in order['items']:
                 pid  = item.get("product_id")
                 qty = item.get("qty",0)
                 if pid and qty:
-                    # Best-effort: ignorefailures restoring stock but continue 
-                    self.product_model.increase_stock(pid,qty)
+                    # Restore stock for this item
+                    success = self.product_model.increase_stock(pid, qty)
+                    if success:
+                        restored_count += 1
+                        product = self.product_model.get_by_id(pid)
+                        if product:
+                            print(f"Restored {qty} units of {product['name']} (New stock: {product['stock']})")
+            
+            if restored_count > 0:
+                print(f"Stock restored for {restored_count} item(s) in the order.")
                     
         # Update the order status in DB
         try:
