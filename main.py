@@ -27,7 +27,7 @@ from core.services.admin_service import AdminService
 
 def clear_screen():
     """Clear the console screen for better UX."""
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear') # this will execute the command clear/cls before the next command is taken in terminal .
 
 
 def print_header(title: str):
