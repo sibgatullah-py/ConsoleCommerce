@@ -27,6 +27,7 @@ from typing import Optional, Any, List, Dict
 from  core.models.product import Product
 from  core.models.order import Order
 from  core.models.user import User
+
 # all the dependencies are imported-----------------------------------------------------------------------------------------
 
 
@@ -72,7 +73,7 @@ class AdminService:
         
         return self.product_model.add_product(name, price, stock, description)
     
-    def update_product(self, product_id: int, name = None, price = None, stock=None,description=None) -> bool:
+    def update_product(self, product_id: int, name = None, price = None, stock=None,description=None)-> bool:
         """
         Update an existing product's fields. Fields left as None are not changed.
         """
@@ -107,13 +108,13 @@ class AdminService:
     
     
     # ----- Stock helpers -----
-    def increase_stock(self, product_id: int, qty: int) -> bool:
+    def increase_stock(self, product_id: int, qty: int)-> bool:
         """Increase a product's stock (admin-only if auth is used)."""
         if not self._ensure_admin():
             return False
         return self.product_model.increase_stock(product_id, qty)
     
-    def reduce_stock(self, product_id: int, qty: int) -> bool:
+    def reduce_stock(self, product_id: int, qty: int)-> bool:
         """Increase a product's stock (admin-only if auth is used)."""
         if not self._ensure_admin():
             return False
@@ -135,7 +136,7 @@ class AdminService:
     
     def update_order_status(self, order_id: int, new_status: str)-> bool:
         """
-        Updata an order status. Handles 'cancled' specially: if an order is cancelled,
+        Updata an order status. Handles 'canceled' specially: if an order is cancelled,
         this method attempts to restore product stock for each item in the order (only if it wasn't cancelled before).
         Returns True on success, False on failure or permission denied. 
         """
